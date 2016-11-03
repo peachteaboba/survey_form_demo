@@ -1,0 +1,93 @@
+<html>
+
+    <head>
+        <title>Sockets!</title>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script type ="text/javascript" src="/socket.io/socket.io.js"></script>
+        <script type ="text/javascript">
+            $(document).ready(function (){
+                // this triggers the connection event in our server!
+                var socket = io.connect();
+                // we'll write all the socket stuff after the above line!
+
+                $('button').click(function (){
+                    socket.emit("button_clicked", {reason: "because I want to learn about sockets!"});
+                });
+
+
+
+                socket.on('server_response', function (data){
+                    console.log(data);
+
+                    var jsonStr = JSON.stringify(data);
+
+
+
+                    document.getElementById("new").innerHTML =
+                          '<h4> your json data: ' + jsonStr + '</h4>' + '<p>your lucky number is ' + data.rand + '</p>';
+
+
+                });
+
+
+                $('form').submit(function(){
+                    var formData = $('form').serialize();
+
+                    socket.emit("form_submitted", formData);
+
+                    return false;
+
+                });
+
+
+
+
+
+
+
+
+
+            })
+        </script>
+    </head>
+
+
+
+
+    <body>
+        <h1>Survey Form Demo</h1>
+
+
+        <form action="/submit" method="post">
+            Name: <input type="text" name="name">
+            Location:
+            <select name="location">
+                <option value="Burbank">Burbank</option>
+                <option value="Seattle">Seattle</option>
+                <option value="SJ">SJ</option>
+            </select>
+            Favorite Language:
+            <select name="language">
+                <option value="Javascript">Javascript</option>
+                <option value="Ruby">Ruby</option>
+                <option value="PHP">PHP</option>
+            </select>
+            Comment: <textarea type="text" name="comment"></textarea>
+
+            <input type="submit" value="SUBMIT!!">
+
+
+        </form>
+
+
+        <button>Press Me!</button>
+
+        <div id="new"></div>
+
+
+
+    </body>
+
+
+
+</html>
